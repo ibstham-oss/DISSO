@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Market Prediction Dashboard</title>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -32,6 +36,11 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
+        }
+
+        /* Small spacer on left to help center title visually */
+        .header-spacer {
+            width: 80px;
         }
 
         .header-title {
@@ -114,8 +123,8 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            max-height: 350px;       /* height of the card */
-            overflow-y: auto;        /* scroll inside card */
+            max-height: 350px;      /* card height */
+            overflow-y: auto;       /* scroll inside this card */
         }
 
         .chart-item {
@@ -130,18 +139,16 @@
             color: #333;
         }
 
-        .chart-frame {
+        .chart-canvas {
             width: 100%;
             height: 200px;
-            border: none;
-            border-radius: 8px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <div style="width: 80px;"></div>
+            <div class="header-spacer"></div>
 
             <div class="header-title">
                 <h1>RHEO VENTURES</h1>
@@ -155,40 +162,100 @@
         </header>
 
         <div class="dashboard-grid">
+            <!-- Left card -->
             <div class="welcome-card card">
                 <h2>Welcome back!</h2>
                 <p>Track your market predictions and analytics</p>
             </div>
 
-            <!-- MIDDLE CARD: scrollable charts -->
+            <!-- Middle card: scrollable charts -->
             <div class="card charts-card">
                 <h2>Live Commodity Charts</h2>
 
                 <div class="chart-item">
                     <h3>Gold / USD</h3>
-                    <!-- Replace src with your preferred embedded chart provider -->
-                    <iframe
-                        class="chart-frame"
-                        src="https://example.com/gold-usd-chart">
-                    </iframe>
+                    <canvas id="goldChart" class="chart-canvas"></canvas>
                 </div>
 
                 <div class="chart-item">
                     <h3>Silver / USD</h3>
-                    <iframe
-                        class="chart-frame"
-                        src="https://example.com/silver-usd-chart">
-                    </iframe>
+                    <canvas id="silverChart" class="chart-canvas"></canvas>
                 </div>
 
-                <!-- Add more charts as needed in more .chart-item blocks -->
+                <!-- You can duplicate .chart-item blocks for more charts -->
             </div>
 
+            <!-- Right card -->
             <div class="card">
                 <h2>Recent Predictions</h2>
                 <p>Latest prediction data</p>
             </div>
         </div>
     </div>
-</body>
-</html>
+
+    <!-- Chart.js setup -->
+    <script>
+        // Gold chart
+        const goldCtx = document.getElementById('goldChart').getContext('2d');
+        new Chart(goldCtx, {
+            type: 'line',
+            data: {
+                // Example labels (e.g. days or timestamps)
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                datasets: [{
+                    label: 'Gold / USD',
+                    // Example prices – replace with real data later
+                    data: [2300, 2315, 2290, 2330, 2320],
+                    borderColor: '#f1c40f',
+                    backgroundColor: 'rgba(241, 196, 15, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.25,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#666'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: '#666'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Silver chart
+        const silverCtx = document.getElementById('silverChart').getContext('2d');
+        new Chart(silverCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                datasets: [{
+                    label: 'Silver / USD',
+                    data: [28.3, 28.6, 28.1, 29.0, 28.7],
+                    borderColor: '#bdc3c7',
+                    backgroundColor: 'rgba(189, 195, 199, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.25,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                   
