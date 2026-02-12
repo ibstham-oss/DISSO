@@ -5,25 +5,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Market Prediction Dashboard</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d6a4f 0%, #1b4332 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #2d6a4f 0%, #764ba2 100%);
-            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
+            color: #2d6a4f;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-top: 5px;
+            font-size: 0.95rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            color: #333;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, #2d6a4f 0%, #1b4332 100%);
             color: white;
-            font-size: 3rem;
+            padding: 40px;
             text-align: center;
+        }
+
+        .welcome-card h2 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .welcome-card p {
+            font-size: 1rem;
+            opacity: 0.9;
         }
     </style>
 </head>
 <body>
-    <h1>Market Prediction Dashboard</h1>
+    <div class="container">
+        <header>
+            <h1>Market Prediction Dashboard</h1>
+            <p class="subtitle">Real-time insights for commodities and major stocks</p>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="welcome-card card">
+                <h2>Welcome back!</h2>
+                <p>Track your market predictions and analytics</p>
+            </div>
+
+            <div class="card">
+                <h2>Active Assets</h2>
+                <p>Your tracked assets will appear here</p>
+            </div>
+
+            <div class="card">
+                <h2>Recent Predictions</h2>
+                <p>Latest prediction data</p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
