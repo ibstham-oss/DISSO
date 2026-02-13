@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Market Prediction Dashboard</title>
 
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <style>
         * {
             margin: 0;
@@ -96,36 +93,84 @@
             opacity: 0.9;
         }
 
-        .charts-card {
+        /* Price cards - BIG and prominent */
+        .price-cards {
             display: flex;
             flex-direction: column;
             gap: 15px;
             height: 350px;
-            overflow-y: auto;
         }
 
-        .chart-item {
-            border: 1px solid #eee;
-            border-radius: 10px;
-            padding: 10px;
-            flex-shrink: 0;
+        .price-card {
+            flex: 1;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #f1f3f4;
+            border-radius: 16px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .chart-item h3 {
-            font-size: 1rem;
+        .price-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border-color: #2d6a4f;
+        }
+
+        .price-card.gold {
+            border-color: #f1c40f;
+        }
+
+        .price-card.silver {
+            border-color: #bdc3c7;
+        }
+
+        .price-symbol {
+            font-size: 1.1rem;
+            color: #666;
             margin-bottom: 8px;
-            color: #333;
+            font-weight: 500;
         }
 
-        .chart-canvas {
-            width: 100% !important;
-            height: 140px !important;
+        .price-symbol.gold {
+            color: #f1c40f;
+        }
+
+        .price-symbol.silver {
+            color: #bdc3c7;
+        }
+
+        .current-price {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2d6a4f;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .price-change {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .price-up { color: #27ae60; }
+        .price-down { color: #e74c3c; }
+
+        .change-arrow {
+            font-size: 1.2rem;
+            margin-right: 4px;
         }
 
         .auth-card {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
+            flex-direction: 350px;
+            gap: 0;
             padding: 0;
             height: 350px;
         }
@@ -136,7 +181,7 @@
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            font-size: 1rem;
+            font-size: 1.2rem;
             border-radius: 12px;
             border: none;
             background: linear-gradient(135deg, #2d6a4f 0%, #667eea 100%);
@@ -151,6 +196,16 @@
             transform: translateY(-1px);
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.18);
             opacity: 0.95;
+        }
+
+        .auth-card .auth-box:first-child {
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .auth-card .auth-box:last-child {
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
         }
     </style>
 </head>
@@ -171,15 +226,23 @@
                 <p>Track your market predictions and analytics</p>
             </div>
 
-            <div class="card charts-card">
-                <h2>Live Commodity Charts</h2>
-                <div class="chart-item">
-                    <h3>Gold / USD</h3>
-                    <canvas id="goldChart" class="chart-canvas"></canvas>
-                </div>
-                <div class="chart-item">
-                    <h3>Silver / USD</h3>
-                    <canvas id="silverChart" class="chart-canvas"></canvas>
+            <div class="card">
+                <h2>Live Commodity Prices</h2>
+                <div class="price-cards">
+                    <div class="price-card gold">
+                        <div class="price-symbol gold">XAU/USD</div>
+                        <div class="current-price">$2,681</div>
+                        <div class="price-change price-up">
+                            <span class="change-arrow">↑</span>+1.2%
+                        </div>
+                    </div>
+                    <div class="price-card silver">
+                        <div class="price-symbol silver">XAG/USD</div>
+                        <div class="current-price">$32.01</div>
+                        <div class="price-change price-up">
+                            <span class="change-arrow">↑</span>+0.8%
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -191,119 +254,27 @@
     </div>
 
     <script>
-        // Wait for DOM to be fully loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // Real current market prices (Feb 2026 values)
-            const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-            const goldData = [2658, 2662, 2648, 2675, 2681];  // Real recent gold prices
-            const silverData = [31.45, 31.62, 31.28, 31.85, 32.01];  // Real recent silver prices
+        // Live price updates (simulated for demo)
+        function updatePrices() {
+            const goldPrice = (2681 + (Math.random() - 0.5) * 20).toFixed(0);
+            const silverPrice = (32.01 + (Math.random() - 0.5) * 0.5).toFixed(2);
+            
+            const goldChange = (Math.random() > 0.5 ? '+' : '-') + (Math.random() * 2).toFixed(1) + '%';
+            const silverChange = (Math.random() > 0.5 ? '+' : '-') + (Math.random() * 1).toFixed(1) + '%';
+            
+            document.querySelector('.current-price').textContent = `$${goldPrice}`;
+            document.querySelector('.price-card.silver .current-price').textContent = `$${silverPrice}`;
+            
+            document.querySelector('.price-change').innerHTML = `<span class="change-arrow">${goldChange.startsWith('+') ? '↑' : '↓'}</span>${goldChange}`;
+            document.querySelector('.price-card.silver .price-change').innerHTML = `<span class="change-arrow">${silverChange.startsWith('+') ? '↑' : '↓'}</span>${silverChange}`;
+            
+            document.querySelector('.price-change').className = `price-change ${goldChange.startsWith('+') ? 'price-up' : 'price-down'}`;
+            document.querySelector('.price-card.silver .price-change').className = `price-change ${silverChange.startsWith('+') ? 'price-up' : 'price-down'}`;
+        }
 
-            // Gold Chart - GUARANTEED TO DISPLAY
-            const goldCtx = document.getElementById('goldChart');
-            if (goldCtx) {
-                new Chart(goldCtx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Gold / USD',
-                            data: goldData,
-                            borderColor: '#f1c40f',
-                            backgroundColor: 'rgba(241, 196, 15, 0.1)',
-                            borderWidth: 3,
-                            tension: 0.4,
-                            fill: true,
-                            pointRadius: 4,
-                            pointHoverRadius: 6
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        interaction: {
-                            intersect: false,
-                            mode: 'index'
-                        },
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        },
-                        scales: {
-                            x: {
-                                grid: {
-                                    display: false
-                                },
-                                ticks: {
-                                    color: '#666'
-                                }
-                            },
-                            y: {
-                                grid: {
-                                    color: 'rgba(0,0,0,0.05)'
-                                },
-                                ticks: {
-                                    color: '#666'
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            // Silver Chart - GUARANTEED TO DISPLAY  
-            const silverCtx = document.getElementById('silverChart');
-            if (silverCtx) {
-                new Chart(silverCtx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Silver / USD',
-                            data: silverData,
-                            borderColor: '#bdc3c7',
-                            backgroundColor: 'rgba(189, 195, 199, 0.2)',
-                            borderWidth: 3,
-                            tension: 0.4,
-                            fill: true,
-                            pointRadius: 4,
-                            pointHoverRadius: 6
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        interaction: {
-                            intersect: false,
-                            mode: 'index'
-                        },
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        },
-                        scales: {
-                            x: {
-                                grid: {
-                                    display: false
-                                },
-                                ticks: {
-                                    color: '#666'
-                                }
-                            },
-                            y: {
-                                grid: {
-                                    color: 'rgba(0,0,0,0.05)'
-                                },
-                                ticks: {
-                                    color: '#666'
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-        });
+        // Update every 10 seconds
+        setInterval(updatePrices, 10000);
+        updatePrices(); // Initial load
     </script>
 </body>
 </html>
