@@ -38,7 +38,7 @@
             align-items: center;
         }
 
-        /* Small spacer on left to help center title visually */
+        /* Small spacers to help center title visually */
         .header-spacer {
             width: 80px;
         }
@@ -58,27 +58,6 @@
             color: #666;
             margin-top: 5px;
             font-size: 0.95rem;
-        }
-
-        /* Header auth links (unchanged) */
-        .header-auth {
-            display: flex;
-            gap: 12px;
-        }
-
-        .header-auth a {
-            text-decoration: none;
-            font-size: 0.9rem;
-            padding: 6px 12px;
-            border-radius: 999px;
-            border: 1px solid #2d6a4f;
-            color: #2d6a4f;
-            transition: all 0.2s ease;
-        }
-
-        .header-auth a:hover {
-            background: #2d6a4f;
-            color: white;
         }
 
         .dashboard-grid {
@@ -150,31 +129,36 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            padding: 0; /* lets the boxes use full height; add padding if you want space inside */
+            padding: 0;
         }
 
-        /* Make the right card visually match the middle card height */
+        /* Match height with charts card */
         .charts-card,
         .auth-card {
             height: 350px;
         }
 
         .auth-box {
-            flex: 1; /* each takes half the card height */
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
             font-size: 1rem;
-            border-radius: 0;
-            border: 1px solid #2d6a4f;
-            color: #2d6a4f;
-            transition: background 0.2s ease, color 0.2s ease;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, #2d6a4f 0%, #667eea 100%);
+            color: white;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
         }
 
         .auth-box:hover {
-            background: #2d6a4f;
-            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.18);
+            opacity: 0.95;
         }
     </style>
 </head>
@@ -188,10 +172,7 @@
                 <p class="subtitle">Real-time insights for commodities and major stocks</p>
             </div>
 
-            <div class="header-auth">
-                <a href="#login">Login</a>
-                <a href="#register">Register</a>
-            </div>
+            <div class="header-spacer"></div>
         </header>
 
         <div class="dashboard-grid">
@@ -214,8 +195,6 @@
                     <h3>Silver / USD</h3>
                     <canvas id="silverChart" class="chart-canvas"></canvas>
                 </div>
-
-                <!-- You can duplicate .chart-item blocks for more charts -->
             </div>
 
             <!-- Right card: stacked Login/Register rectangles -->
@@ -233,11 +212,9 @@
         new Chart(goldCtx, {
             type: 'line',
             data: {
-                // Example labels (e.g. days or timestamps)
                 labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
                 datasets: [{
                     label: 'Gold / USD',
-                    // Example prices – replace with real data later
                     data: [2300, 2315, 2290, 2330, 2320],
                     borderColor: '#f1c40f',
                     backgroundColor: 'rgba(241, 196, 15, 0.1)',
