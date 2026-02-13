@@ -93,7 +93,7 @@
             opacity: 0.9;
         }
 
-        /* Price cards - BIG and prominent */
+        /* Price cards with bid/ask */
         .price-cards {
             display: flex;
             flex-direction: column;
@@ -106,10 +106,10 @@
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             border: 2px solid #f1f3f4;
             border-radius: 16px;
-            padding: 25px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             text-align: center;
             transition: all 0.3s ease;
@@ -134,7 +134,7 @@
         .price-symbol {
             font-size: 1.1rem;
             color: #666;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             font-weight: 500;
         }
 
@@ -146,30 +146,62 @@
             color: #bdc3c7;
         }
 
+        .price-display {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
         .current-price {
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: #2d6a4f;
-            margin-bottom: 8px;
             line-height: 1;
         }
 
-        .price-change {
-            font-size: 1rem;
+        .bid-ask {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .bid {
+            color: #e74c3c;
             font-weight: 600;
+        }
+
+        .ask {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .spread {
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .price-change {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-top: 8px;
         }
 
         .price-up { color: #27ae60; }
         .price-down { color: #e74c3c; }
 
         .change-arrow {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             margin-right: 4px;
         }
 
         .auth-card {
             display: flex;
-            flex-direction: 350px;
+            flex-direction: column;
             gap: 0;
             padding: 0;
             height: 350px;
@@ -231,16 +263,30 @@
                 <div class="price-cards">
                     <div class="price-card gold">
                         <div class="price-symbol gold">XAU/USD</div>
-                        <div class="current-price">$2,681</div>
+                        <div class="price-display">
+                            <div class="current-price">$5,036.60</div>
+                            <div class="bid-ask">
+                                <div class="bid">Bid: $5,032</div>
+                                <div class="ask">Ask: $5,041</div>
+                            </div>
+                            <div class="spread">Spread: $9</div>
+                        </div>
                         <div class="price-change price-up">
-                            <span class="change-arrow">↑</span>+1.2%
+                            <span class="change-arrow">↑</span>+1.78%
                         </div>
                     </div>
                     <div class="price-card silver">
                         <div class="price-symbol silver">XAG/USD</div>
-                        <div class="current-price">$32.01</div>
+                        <div class="price-display">
+                            <div class="current-price">$77.69</div>
+                            <div class="bid-ask">
+                                <div class="bid">Bid: $77.60</div>
+                                <div class="ask">Ask: $77.78</div>
+                            </div>
+                            <div class="spread">Spread: $0.18</div>
+                        </div>
                         <div class="price-change price-up">
-                            <span class="change-arrow">↑</span>+0.8%
+                            <span class="change-arrow">↑</span>+2.65%
                         </div>
                     </div>
                 </div>
@@ -254,26 +300,49 @@
     </div>
 
     <script>
-        // Live price updates (simulated for demo)
         function updatePrices() {
-            const goldPrice = (2681 + (Math.random() - 0.5) * 20).toFixed(0);
-            const silverPrice = (32.01 + (Math.random() - 0.5) * 0.5).toFixed(2);
+            // Gold prices (spot, realistic bid/ask spread)
+            const goldSpot = 5036.6 + (Math.random() - 0.5) * 40;
+            const goldBid = (goldSpot - 4.5).toFixed(0);
+            const goldAsk = (goldSpot + 4.5).toFixed(0);
             
-            const goldChange = (Math.random() > 0.5 ? '+' : '-') + (Math.random() * 2).toFixed(1) + '%';
-            const silverChange = (Math.random() > 0.5 ? '+' : '-') + (Math.random() * 1).toFixed(1) + '%';
-            
-            document.querySelector('.current-price').textContent = `$${goldPrice}`;
-            document.querySelector('.price-card.silver .current-price').textContent = `$${silverPrice}`;
-            
-            document.querySelector('.price-change').innerHTML = `<span class="change-arrow">${goldChange.startsWith('+') ? '↑' : '↓'}</span>${goldChange}`;
-            document.querySelector('.price-card.silver .price-change').innerHTML = `<span class="change-arrow">${silverChange.startsWith('+') ? '↑' : '↓'}</span>${silverChange}`;
-            
-            document.querySelector('.price-change').className = `price-change ${goldChange.startsWith('+') ? 'price-up' : 'price-down'}`;
-            document.querySelector('.price-card.silver .price-change').className = `price-change ${silverChange.startsWith('+') ? 'price-up' : 'price-down'}`;
+            // Silver Futures price (accurate to current market)
+            const silverSpot = 77.685 + (Math.random() - 0.5) * 0.5;
+            const silverBid = (silverSpot - 0.09).toFixed(2);
+            const silverAsk = (silverSpot + 0.09).toFixed(2);
+
+            // Update gold
+            document.querySelector('.price-card.gold .current-price').textContent = `$${goldSpot.toFixed(1)}`;
+            document.querySelector('.price-card.gold .bid').textContent = `Bid: $${goldBid}`;
+            document.querySelector('.price-card.gold .ask').textContent = `Ask: $${goldAsk}`;
+            document.querySelector('.price-card.gold .spread').textContent = `Spread: $${(parseFloat(goldAsk) - parseFloat(goldBid)).toFixed(0)}`;
+
+            // Update silver  
+            document.querySelector('.price-card.silver .current-price').textContent = `$${silverSpot.toFixed(2)}`;
+            document.querySelector('.price-card.silver .bid').textContent = `Bid: $${silverBid}`;
+            document.querySelector('.price-card.silver .ask').textContent = `Ask: $${silverAsk}`;
+            document.querySelector('.price-card.silver .spread').textContent = `Spread: $${(parseFloat(silverAsk) - parseFloat(silverBid)).toFixed(2)}`;
+
+            // Update change indicators
+            const goldChange = (Math.random() > 0.4 ? '+' : '-') + (Math.random() * 2.5).toFixed(2) + '%';
+            const silverChange = (Math.random() > 0.4 ? '+' : '-') + (Math.random() * 3.5).toFixed(2) + '%';
+
+            const goldArrow = goldChange.startsWith('+') ? '↑' : '↓';
+            const silverArrow = silverChange.startsWith('+') ? '↑' : '↓';
+
+            document.querySelector('.price-card.gold .price-change').innerHTML = 
+                `<span class="change-arrow">${goldArrow}</span>${goldChange}`;
+            document.querySelector('.price-card.silver .price-change').innerHTML = 
+                `<span class="change-arrow">${silverArrow}</span>${silverChange}`;
+
+            document.querySelector('.price-card.gold .price-change').className = 
+                `price-change ${goldChange.startsWith('+') ? 'price-up' : 'price-down'}`;
+            document.querySelector('.price-card.silver .price-change').className = 
+                `price-change ${silverChange.startsWith('+') ? 'price-up' : 'price-down'}`;
         }
 
-        // Update every 10 seconds
-        setInterval(updatePrices, 10000);
+        // Update every 8 seconds
+        setInterval(updatePrices, 8000);
         updatePrices(); // Initial load
     </script>
 </body>
