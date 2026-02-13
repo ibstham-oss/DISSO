@@ -60,6 +60,7 @@
             font-size: 0.95rem;
         }
 
+        /* Header auth links (unchanged) */
         .header-auth {
             display: flex;
             gap: 12px;
@@ -143,6 +144,38 @@
             width: 100%;
             height: 200px;
         }
+
+        /* Right auth card with two stacked rectangles */
+        .auth-card {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 0; /* lets the boxes use full height; add padding if you want space inside */
+        }
+
+        /* Make the right card visually match the middle card height */
+        .charts-card,
+        .auth-card {
+            height: 350px;
+        }
+
+        .auth-box {
+            flex: 1; /* each takes half the card height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1rem;
+            border-radius: 0;
+            border: 1px solid #2d6a4f;
+            color: #2d6a4f;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .auth-box:hover {
+            background: #2d6a4f;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -185,10 +218,10 @@
                 <!-- You can duplicate .chart-item blocks for more charts -->
             </div>
 
-            <!-- Right card -->
-            <div class="card">
-                <h2>Recent Predictions</h2>
-                <p>Latest prediction data</p>
+            <!-- Right card: stacked Login/Register rectangles -->
+            <div class="card auth-card">
+                <a href="#login" class="auth-box">Login</a>
+                <a href="#register" class="auth-box">Register</a>
             </div>
         </div>
     </div>
@@ -258,4 +291,22 @@
                 plugins: {
                     legend: {
                         display: false
-                   
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#666'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: '#666'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
