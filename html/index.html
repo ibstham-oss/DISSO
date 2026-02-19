@@ -452,7 +452,8 @@
         const loginForm = document.getElementById('loginForm');
         loginForm.addEventListener('submit', function (e) {
             e.preventDefault(); // stop page reload
-            window.location.href = 'html/dashboard.html';
+            // index.html and dashboard.html are in the same /html folder on GitHub
+            window.location.href = 'dashboard.html';
         });
     </script>
 </body>
