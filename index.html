@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Prediction Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d6a4f 0%, #667eea 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .header-spacer {
+            width: 80px;
+        }
+
+        .header-title {
+            flex: 1;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2d6a4f;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-top: 5px;
+            font-size: 0.95rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            color: #333;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, #2d6a4f 0%, #667eea 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .welcome-card h2 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .welcome-card p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Price cards with bid/ask */
+        .price-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: 350px;
+        }
+
+        .price-card {
+            flex: 1;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #f1f3f4;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .price-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border-color: #2d6a4f;
+        }
+
+        .price-card.gold {
+            border-color: #f1c40f;
+        }
+
+        .price-card.silver {
+            border-color: #bdc3c7;
+        }
+
+        .price-symbol {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .price-symbol.gold {
+            color: #f1c40f;
+        }
+
+        .price-symbol.silver {
+            color: #bdc3c7;
+        }
+
+        .price-display {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .current-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2d6a4f;
+            line-height: 1;
+        }
+
+        .bid-ask {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .bid {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .ask {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .spread {
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .price-change {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .price-up { color: #27ae60; }
+        .price-down { color: #e74c3c; }
+
+        .change-arrow {
+            font-size: 1.1rem;
+            margin-right: 4px;
+        }
+
+        .auth-card {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            padding: 0;
+            height: 350px;
+        }
+
+        .auth-box {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.2rem;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, #2d6a4f 0%, #667eea 100%);
+            color: white;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+            cursor: pointer;
+        }
+
+        .auth-box:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.18);
+            opacity: 0.95;
+        }
+
+        .auth-card .auth-box:first-child {
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .auth-card .auth-box:last-child {
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        /* Simple modal styles */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+        }
+
+        .modal h2 {
+            margin-bottom: 16px;
+            font-size: 1.4rem;
+            color: #2d6a4f;
+        }
+
+        .modal form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .modal input {
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 0.95rem;
+        }
+
+        .modal button {
+            margin-top: 8px;
+            padding: 10px 12px;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(135deg, #2d6a4f 0%, #667eea 100%);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .modal-close {
+            margin-top: 8px;
+            background: transparent;
+            color: #555;
+            border-radius: 999px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-spacer"></div>
+            <div class="header-title">
+                <h1>RHEO VENTURES</h1>
+                <p class="subtitle">Real-time insights for commodities and major stocks</p>
+            </div>
+            <div class="header-spacer"></div>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="welcome-card card">
+                <h2>Welcome back!</h2>
+                <p>Track your market predictions and analytics</p>
+            </div>
+
+            <div class="card">
+                <h2>Live Commodity Prices</h2>
+                <div class="price-cards">
+                    <div class="price-card gold">
+                        <div class="price-symbol gold">XAU/USD</div>
+                        <div class="price-display">
+                            <div class="current-price">$5,036.60</div>
+                            <div class="bid-ask">
+                                <div class="bid">Bid: $5,032</div>
+                                <div class="ask">Ask: $5,041</div>
+                            </div>
+                            <div class="spread">Spread: $9</div>
+                        </div>
+                        <div class="price-change price-up">
+                            <span class="change-arrow">↑</span>+1.78%
+                        </div>
+                    </div>
+                    <div class="price-card silver">
+                        <div class="price-symbol silver">XAG/USD</div>
+                        <div class="price-display">
+                            <div class="current-price">$77.69</div>
+                            <div class="bid-ask">
+                                <div class="bid">Bid: $77.60</div>
+                                <div class="ask">Ask: $77.78</div>
+                            </div>
+                            <div class="spread">Spread: $0.18</div>
+                        </div>
+                        <div class="price-change price-up">
+                            <span class="change-arrow">↑</span>+2.65%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card auth-card">
+                <button class="auth-box" id="openLogin">Login</button>
+                <button class="auth-box" id="openRegister">Register</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login modal -->
+    <div class="modal-backdrop" id="loginModal">
+        <div class="modal">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+                <button type="button" class="modal-close" data-close="loginModal">Close</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register modal -->
+    <div class="modal-backdrop" id="registerModal">
+        <div class="modal">
+            <h2>Create account</h2>
+            <form>
+                <input type="text" placeholder="Full name" required>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Register</button>
+                <button type="button" class="modal-close" data-close="registerModal">Close</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Price updates
+        function updatePrices() {
+            const goldSpot = 5036.6 + (Math.random() - 0.5) * 40;
+            const goldBid = (goldSpot - 4.5).toFixed(0);
+            const goldAsk = (goldSpot + 4.5).toFixed(0);
+
+            const silverSpot = 77.685 + (Math.random() - 0.5) * 0.5;
+            const silverBid = (silverSpot - 0.09).toFixed(2);
+            const silverAsk = (silverSpot + 0.09).toFixed(2);
+
+            document.querySelector('.price-card.gold .current-price').textContent = `$${goldSpot.toFixed(1)}`;
+            document.querySelector('.price-card.gold .bid').textContent = `Bid: $${goldBid}`;
+            document.querySelector('.price-card.gold .ask').textContent = `Ask: $${goldAsk}`;
+            document.querySelector('.price-card.gold .spread').textContent =
+                `Spread: $${(parseFloat(goldAsk) - parseFloat(goldBid)).toFixed(0)}`;
+
+            document.querySelector('.price-card.silver .current-price').textContent = `$${silverSpot.toFixed(2)}`;
+            document.querySelector('.price-card.silver .bid').textContent = `Bid: $${silverBid}`;
+            document.querySelector('.price-card.silver .ask').textContent = `Ask: $${silverAsk}`;
+            document.querySelector('.price-card.silver .spread').textContent =
+                `Spread: $${(parseFloat(silverAsk) - parseFloat(silverBid)).toFixed(2)}`;
+
+            const goldChange = (Math.random() > 0.4 ? '+' : '-') + (Math.random() * 2.5).toFixed(2) + '%';
+            const silverChange = (Math.random() > 0.4 ? '+' : '-') + (Math.random() * 3.5).toFixed(2) + '%';
+
+            const goldArrow = goldChange.startsWith('+') ? '↑' : '↓';
+            const silverArrow = silverChange.startsWith('+') ? '↑' : '↓';
+
+            const goldChangeEl = document.querySelector('.price-card.gold .price-change');
+            const silverChangeEl = document.querySelector('.price-card.silver .price-change');
+
+            goldChangeEl.innerHTML = `<span class="change-arrow">${goldArrow}</span>${goldChange}`;
+            silverChangeEl.innerHTML = `<span class="change-arrow">${silverArrow}</span>${silverChange}`;
+
+            goldChangeEl.className = `price-change ${goldChange.startsWith('+') ? 'price-up' : 'price-down'}`;
+            silverChangeEl.className = `price-change ${silverChange.startsWith('+') ? 'price-up' : 'price-down'}`;
+        }
+
+        setInterval(updatePrices, 8000);
+        updatePrices();
+
+        // Modal logic
+        const loginModal = document.getElementById('loginModal');
+        const registerModal = document.getElementById('registerModal');
+        document.getElementById('openLogin').onclick = () => loginModal.style.display = 'flex';
+        document.getElementById('openRegister').onclick = () => registerModal.style.display = 'flex';
+
+        document.querySelectorAll('.modal-close').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.getAttribute('data-close');
+                document.getElementById(id).style.display = 'none';
+            });
+        });
+
+        [loginModal, registerModal].forEach(modal => {
+            modal.addEventListener('click', e => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+
+        // Redirect after "login"
+       // Redirect after "login"
+const loginForm = document.getElementById('loginForm');
+loginForm.addEventListener('submit', function (e) {
+    e.preventDefault(); // stop page reload
+
+    // send user straight to the working GitHub Pages URL
+    window.location.href = 'https://ibstham-oss.github.io/DISSO/html/dashboard.html';
+});
+    </script>
+</body>
+</html>
