@@ -93,110 +93,56 @@
             opacity: 0.9;
         }
 
-        /* Price cards with bid/ask */
-        .price-cards {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            height: 350px;
-        }
-
-        .price-card {
-            flex: 1;
+        /* Live Massive price card */
+        .live-price-card {
+            margin-top: 16px;
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border: 2px solid #f1f3f4;
             border-radius: 16px;
             padding: 20px;
+        }
+
+        .live-price-controls {
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .price-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-            border-color: #2d6a4f;
-        }
-
-        .price-card.gold {
-            border-color: #f1c40f;
-        }
-
-        .price-card.silver {
-            border-color: #bdc3c7;
-        }
-
-        .price-symbol {
-            font-size: 1.1rem;
-            color: #666;
-            margin-bottom: 12px;
-            font-weight: 500;
-        }
-
-        .price-symbol.gold {
-            color: #f1c40f;
-        }
-
-        .price-symbol.silver {
-            color: #bdc3c7;
-        }
-
-        .price-display {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
             gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
         }
 
-        .current-price {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #2d6a4f;
-            line-height: 1;
-        }
-
-        .bid-ask {
-            display: flex;
-            gap: 20px;
+        .live-price-controls label {
+            flex: 1 1 150px;
             font-size: 0.9rem;
             color: #555;
         }
 
-        .bid {
-            color: #e74c3c;
+        .live-price-controls input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+        }
+
+        .live-price-controls button {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: none;
+            background: #2d6a4f;
+            color: white;
+            cursor: pointer;
             font-weight: 600;
         }
 
-        .ask {
-            color: #27ae60;
-            font-weight: 600;
+        .live-price-controls button:hover {
+            background: #24543f;
         }
 
-        .spread {
-            font-size: 0.85rem;
-            color: #999;
-            margin-top: 4px;
+        #livePriceResult h3 {
+            margin-bottom: 4px;
+            color: #2d6a4f;
         }
 
-        .price-change {
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-top: 8px;
-        }
-
-        .price-up { color: #27ae60; }
-        .price-down { color: #e74c3c; }
-
-        .change-arrow {
-            font-size: 1.1rem;
-            margin-right: 4px;
+        #livePriceResult p {
+            margin: 2px 0;
+            color: #333;
         }
 
         .auth-card {
@@ -315,40 +261,26 @@
             <div class="welcome-card card">
                 <h2>Welcome back!</h2>
                 <p>Track your market predictions and analytics</p>
-            </div>
 
-            <div class="card">
-                <h2>Live Commodity Prices</h2>
-                <div class="price-cards">
-                    <div class="price-card gold">
-                        <div class="price-symbol gold">XAU/USD</div>
-                        <div class="price-display">
-                            <div class="current-price">$5,036.60</div>
-                            <div class="bid-ask">
-                                <div class="bid">Bid: $5,032</div>
-                                <div class="ask">Ask: $5,041</div>
-                            </div>
-                            <div class="spread">Spread: $9</div>
-                        </div>
-                        <div class="price-change price-up">
-                            <span class="change-arrow">↑</span>+1.78%
-                        </div>
+                <!-- NEW Massive live stock price card -->
+                <div class="live-price-card">
+                    <div class="live-price-controls">
+                        <label>
+                            Ticker
+                            <input type="text" id="tickerInput" placeholder="e.g. AAPL">
+                        </label>
+                        <button id="loadPriceBtn">Get live price</button>
                     </div>
-                    <div class="price-card silver">
-                        <div class="price-symbol silver">XAG/USD</div>
-                        <div class="price-display">
-                            <div class="current-price">$77.69</div>
-                            <div class="bid-ask">
-                                <div class="bid">Bid: $77.60</div>
-                                <div class="ask">Ask: $77.78</div>
-                            </div>
-                            <div class="spread">Spread: $0.18</div>
-                        </div>
-                        <div class="price-change price-up">
-                            <span class="change-arrow">↑</span>+2.65%
-                        </div>
+                    <div id="livePriceResult">
+                        <p>Enter a ticker and click “Get live price”.</p>
                     </div>
                 </div>
+            </div>
+
+            <!-- You can later replace this whole card with Massive commodity data if you want -->
+            <div class="card">
+                <h2>Commodities (placeholder)</h2>
+                <p>This section used to show fake gold/silver prices and is now a placeholder.</p>
             </div>
 
             <div class="card auth-card">
@@ -386,48 +318,7 @@
     </div>
 
     <script>
-        // Price updates
-        function updatePrices() {
-            const goldSpot = 5036.6 + (Math.random() - 0.5) * 40;
-            const goldBid = (goldSpot - 4.5).toFixed(0);
-            const goldAsk = (goldSpot + 4.5).toFixed(0);
-
-            const silverSpot = 77.685 + (Math.random() - 0.5) * 0.5;
-            const silverBid = (silverSpot - 0.09).toFixed(2);
-            const silverAsk = (silverSpot + 0.09).toFixed(2);
-
-            document.querySelector('.price-card.gold .current-price').textContent = `$${goldSpot.toFixed(1)}`;
-            document.querySelector('.price-card.gold .bid').textContent = `Bid: $${goldBid}`;
-            document.querySelector('.price-card.gold .ask').textContent = `Ask: $${goldAsk}`;
-            document.querySelector('.price-card.gold .spread').textContent =
-                `Spread: $${(parseFloat(goldAsk) - parseFloat(goldBid)).toFixed(0)}`;
-
-            document.querySelector('.price-card.silver .current-price').textContent = `$${silverSpot.toFixed(2)}`;
-            document.querySelector('.price-card.silver .bid').textContent = `Bid: $${silverBid}`;
-            document.querySelector('.price-card.silver .ask').textContent = `Ask: $${silverAsk}`;
-            document.querySelector('.price-card.silver .spread').textContent =
-                `Spread: $${(parseFloat(silverAsk) - parseFloat(silverBid)).toFixed(2)}`;
-
-            const goldChange = (Math.random() > 0.4 ? '+' : '-') + (Math.random() * 2.5).toFixed(2) + '%';
-            const silverChange = (Math.random() > 0.4 ? '+' : '-') + (Math.random() * 3.5).toFixed(2) + '%';
-
-            const goldArrow = goldChange.startsWith('+') ? '↑' : '↓';
-            const silverArrow = silverChange.startsWith('+') ? '↑' : '↓';
-
-            const goldChangeEl = document.querySelector('.price-card.gold .price-change');
-            const silverChangeEl = document.querySelector('.price-card.silver .price-change');
-
-            goldChangeEl.innerHTML = `<span class="change-arrow">${goldArrow}</span>${goldChange}`;
-            silverChangeEl.innerHTML = `<span class="change-arrow">${silverArrow}</span>${silverChange}`;
-
-            goldChangeEl.className = `price-change ${goldChange.startsWith('+') ? 'price-up' : 'price-down'}`;
-            silverChangeEl.className = `price-change ${silverChange.startsWith('+') ? 'price-up' : 'price-down'}`;
-        }
-
-        setInterval(updatePrices, 8000);
-        updatePrices();
-
-        // Modal logic
+        // Modal logic (unchanged)
         const loginModal = document.getElementById('loginModal');
         const registerModal = document.getElementById('registerModal');
         document.getElementById('openLogin').onclick = () => loginModal.style.display = 'flex';
@@ -449,14 +340,55 @@
         });
 
         // Redirect after "login"
-       // Redirect after "login"
-const loginForm = document.getElementById('loginForm');
-loginForm.addEventListener('submit', function (e) {
-    e.preventDefault(); // stop page reload
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', function (e) {
+            e.preventDefault(); // stop page reload
+            window.location.href = 'https://ibstham-oss.github.io/DISSO/html/dashboard.html';
+        });
 
-    // send user straight to the working GitHub Pages URL
-    window.location.href = 'https://ibstham-oss.github.io/DISSO/html/dashboard.html';
-});
+        // Massive live price fetch
+        const API_KEY = 'QIoiohknZq4PzOzV2uQ_B8JWbqhb2DRI';
+        const BASE_URL = 'https://api.massive.com/v2/snapshot/locale/us/markets/stocks/tickers';
+
+        async function fetchLivePrice(ticker) {
+            const url = `${BASE_URL}/${encodeURIComponent(ticker)}?apiKey=${API_KEY}`;
+
+            try {
+                const res = await fetch(url);
+                if (!res.ok) throw new Error('API error: ' + res.status);
+
+                const data = await res.json();
+
+                // Massive snapshot: prefer lastTrade.p, then lastQuote.p, then day.c[web:322]
+                const t = data.ticker || {};
+                const price =
+                    t.lastTrade?.p ??
+                    t.lastQuote?.p ??
+                    t.day?.c;
+
+                if (!price) {
+                    document.getElementById('livePriceResult').innerHTML =
+                        `<p>Could not find price for ${ticker}.</p>`;
+                    return;
+                }
+
+                document.getElementById('livePriceResult').innerHTML = `
+                    <h3>${ticker.toUpperCase()}</h3>
+                    <p>Current price: <strong>${price}</strong></p>
+                `;
+            } catch (err) {
+                console.error(err);
+                document.getElementById('livePriceResult').innerHTML =
+                    '<p>Error loading price. Try again later.</p>';
+            }
+        }
+
+        document.getElementById('loadPriceBtn').addEventListener('click', () => {
+            const ticker = document.getElementById('tickerInput').value.trim();
+            if (!ticker) return;
+            document.getElementById('livePriceResult').innerHTML = '<p>Loading…</p>';
+            fetchLivePrice(ticker);
+        });
     </script>
 </body>
 </html>
