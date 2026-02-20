@@ -345,7 +345,7 @@
             window.location.href = 'https://ibstham-oss.github.io/DISSO/html/dashboard.html';
         });
 
-        // Fetch live price from FastAPI server (disso.py)
+        // Fetch live price from FastAPI backend (disso.py)
         async function fetchLivePrice(ticker) {
             const url = `http://localhost:8000/api/price?ticker=${encodeURIComponent(ticker)}`;
 
