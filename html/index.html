@@ -32,15 +32,12 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
-        }
-
-        .header-spacer {
-            width: 80px;
+            justify-content: space-between;
         }
 
         .header-title {
-            flex: 1;
             text-align: center;
+            flex: 1;
         }
 
         h1 {
@@ -53,6 +50,23 @@
             color: #666;
             margin-top: 5px;
             font-size: 0.95rem;
+        }
+
+        .auth-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth-link-btn {
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(135deg, #2d6a4f 0%, #667eea 100%);
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
         }
 
         .dashboard-grid {
@@ -93,7 +107,6 @@
             opacity: 0.9;
         }
 
-        /* live stock price box */
         .live-price-card {
             margin-top: 16px;
             background: #f8fafc;
@@ -146,115 +159,31 @@
         }
 
         .auth-card {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-            padding: 0;
-            height: 350px;
-        }
-
-        .auth-box {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            font-size: 1.2rem;
-            border-radius: 12px;
-            border: none;
-            background: linear-gradient(135deg, #2d6a4f 0%, #667eea 100%);
-            color: white;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-            transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
-            cursor: pointer;
-        }
-
-        .auth-box:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.18);
-            opacity: 0.95;
-        }
-
-        .auth-card .auth-box:first-child {
-            border-top-left-radius: 12px;
-            border-top-right-radius: 12px;
-        }
-
-        .auth-card .auth-box:last-child {
-            border-bottom-left-radius: 12px;
-            border-bottom-right-radius: 12px;
-        }
-
-        /* Simple modal styles */
-        .modal-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal {
             background: white;
             border-radius: 12px;
-            padding: 24px;
-            width: 100%;
-            max-width: 380px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .modal h2 {
-            margin-bottom: 16px;
-            font-size: 1.4rem;
-            color: #2d6a4f;
-        }
-
-        .modal form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .modal input {
-            padding: 8px 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 0.95rem;
-        }
-
-        .modal button {
-            margin-top: 8px;
-            padding: 10px 12px;
-            border-radius: 999px;
-            border: none;
-            background: linear-gradient(135deg, #2d6a4f 0%, #667eea 100%);
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .modal-close {
-            margin-top: 8px;
-            background: transparent;
-            color: #555;
-            border-radius: 999px;
-            border: 1px solid #ccc;
+        .auth-card p {
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <div class="header-spacer"></div>
+            <div></div>
+
             <div class="header-title">
                 <h1>RHEO VENTURES</h1>
                 <p class="subtitle">Real-time insights for commodities and major stocks</p>
             </div>
-            <div class="header-spacer"></div>
+
+            <div class="auth-links">
+                <a class="auth-link-btn" href="{{ url_for('login') }}">Login</a>
+                <a class="auth-link-btn" href="{{ url_for('register') }}">Register</a>
+            </div>
         </header>
 
         <div class="dashboard-grid">
@@ -262,14 +191,13 @@
                 <h2>Welcome back!</h2>
                 <p>Track your market predictions and analytics</p>
 
-                <!-- live stock price box -->
                 <div class="live-price-card">
                     <div class="live-price-controls">
                         <label>
                             Ticker
                             <input type="text" id="tickerInput" placeholder="e.g. AAPL">
                         </label>
-                        <button id="loadPriceBtn">Get live price</button>
+                        <button id="loadPriceBtn" type="button">Get live price</button>
                     </div>
                     <div id="livePriceResult">
                         <p>Enter a ticker and click “Get live price”.</p>
@@ -282,101 +210,54 @@
                 <p>You can later connect this card to real commodity data.</p>
             </div>
 
-            <div class="card auth-card">
-                <button class="auth-box" id="openLogin">Login</button>
-                <button class="auth-box" id="openRegister">Register</button>
+            <div class="auth-card">
+                <h2>Get started</h2>
+                <p>Use the buttons in the header to log in or create an account.</p>
+                <p>Once logged in, you’ll be redirected to your dashboard.</p>
             </div>
         </div>
     </div>
 
-    <!-- Login modal -->
-    <div class="modal-backdrop" id="loginModal">
-        <div class="modal">
-            <h2>Login</h2>
-            <form id="loginForm">
-                <input type="email" placeholder="Email" required>
-                <input type="password" placeholder="Password" required>
-                <button type="submit">Login</button>
-                <button type="button" class="modal-close" data-close="loginModal">Close</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Register modal -->
-    <div class="modal-backdrop" id="registerModal">
-        <div class="modal">
-            <h2>Create account</h2>
-            <form>
-                <input type="text" placeholder="Full name" required>
-                <input type="email" placeholder="Email" required>
-                <input type="password" placeholder="Password" required>
-                <button type="submit">Register</button>
-                <button type="button" class="modal-close" data-close="registerModal">Close</button>
-            </form>
-        </div>
-    </div>
-
     <script>
-        // Modal logic
-        const loginModal = document.getElementById('loginModal');
-        const registerModal = document.getElementById('registerModal');
-        document.getElementById('openLogin').onclick = () => loginModal.style.display = 'flex';
-        document.getElementById('openRegister').onclick = () => registerModal.style.display = 'flex';
+        const apiBase = "http://127.0.0.1:8000";  // FastAPI server base URL
 
-        document.querySelectorAll('.modal-close').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const id = btn.getAttribute('data-close');
-                document.getElementById(id).style.display = 'none';
-            });
-        });
-
-        [loginModal, registerModal].forEach(modal => {
-            modal.addEventListener('click', e => {
-                if (e.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
-        });
-
-        // Redirect after "login"
-        const loginForm = document.getElementById('loginForm');
-        loginForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            window.location.href = 'https://ibstham-oss.github.io/DISSO/html/dashboard.html';
-        });
-
-        // Fetch live price from FastAPI server (disso.py)
         async function fetchLivePrice(ticker) {
-            const url = `http://localhost:8000/api/price?ticker=${encodeURIComponent(ticker)}`;
+            const url = `${apiBase}/api/price?ticker=${encodeURIComponent(ticker)}`;
+            console.log("Requesting:", url);
 
             try {
                 const res = await fetch(url);
-                if (!res.ok) throw new Error('API error: ' + res.status);
+                console.log("Status:", res.status);
+
+                if (!res.ok) {
+                    throw new Error("API error: " + res.status);
+                }
 
                 const data = await res.json();
-                const price = data.price;
+                console.log("Data:", data);
 
+                const price = data.price;
                 if (!price) {
-                    document.getElementById('livePriceResult').innerHTML =
+                    document.getElementById("livePriceResult").innerHTML =
                         `<p>Could not find price for ${ticker}.</p>`;
                     return;
                 }
 
-                document.getElementById('livePriceResult').innerHTML = `
+                document.getElementById("livePriceResult").innerHTML = `
                     <h3>${data.ticker}</h3>
                     <p>Current price: <strong>${price}</strong></p>
                 `;
             } catch (err) {
-                console.error(err);
-                document.getElementById('livePriceResult').innerHTML =
-                    '<p>Error loading price. Try again later.</p>';
+                console.error("Fetch error:", err);
+                document.getElementById("livePriceResult").innerHTML =
+                    "<p>Error loading price. Check console for details.</p>";
             }
         }
 
-        document.getElementById('loadPriceBtn').addEventListener('click', () => {
-            const ticker = document.getElementById('tickerInput').value.trim();
+        document.getElementById("loadPriceBtn").addEventListener("click", () => {
+            const ticker = document.getElementById("tickerInput").value.trim();
             if (!ticker) return;
-            document.getElementById('livePriceResult').innerHTML = '<p>Loading…</p>';
+            document.getElementById("livePriceResult").innerHTML = "<p>Loading…</p>";
             fetchLivePrice(ticker);
         });
     </script>
